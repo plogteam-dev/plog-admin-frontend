@@ -39,8 +39,13 @@ export default function LogListPage() {
       dataIndex: ['user', 'nickname'],
     },
     {
-      title: '날짜',
+      title: '로그 날짜',
       dataIndex: 'logDate',
+      render: (date: string) => dayjs(date).format('YYYY-MM-DD'),
+    },
+    {
+      title: '생성일',
+      dataIndex: 'createdAt',
       render: (date: string) => dayjs(date).format('YYYY-MM-DD'),
     },
     {
