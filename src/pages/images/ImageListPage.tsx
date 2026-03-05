@@ -24,11 +24,11 @@ export default function ImageListPage() {
     {
       title: '썸네일',
       dataIndex: 'thumbnailKey',
-      width: 80,
+      width: 140,
       render: (key: string) => (
         <AntImage
-          width={50}
-          height={50}
+          width={120}
+          height={120}
           src={`${CDN_BASE}/${key}`}
           style={{ objectFit: 'cover', borderRadius: 4 }}
         />

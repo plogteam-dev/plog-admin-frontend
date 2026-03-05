@@ -30,7 +30,7 @@ export default function LogListPage() {
       title: '제목',
       dataIndex: 'title',
       render: (text: string, record: Log) => (
-        <Link to={`/logs/${record.id}`}>{text}</Link>
+        <Link to={`/logs/${record.id}`}>{text || '(제목 없음)'}</Link>
       ),
     },
     {

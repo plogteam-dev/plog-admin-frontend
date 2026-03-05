@@ -5,7 +5,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import { useSpots } from '@/hooks/useSpots';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { PAGE_SIZE } from '@/constants';
-import type { EntityStatus, Spot, SpotImage } from '@/types';
+import type { EntityStatus, Spot } from '@/types';
 import dayjs from 'dayjs';
 
 export default function SpotListPage() {
@@ -31,10 +31,19 @@ export default function SpotListPage() {
       render: (text: string | null) => text ?? '-',
     },
     {
+      title: '로그',
+      dataIndex: ['log', 'title'],
+      render: (text: string) => text || '-',
+    },
+    {
+      title: '작성자',
+      dataIndex: ['log', 'user', 'nickname'],
+      render: (text: string) => text || '-',
+    },
+    {
       title: '이미지 수',
-      dataIndex: 'spotImages',
+      dataIndex: ['_count', 'spotImages'],
       width: 90,
-      render: (images: SpotImage[]) => images?.length ?? 0,
     },
     {
       title: '생성일',

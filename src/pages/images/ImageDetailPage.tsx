@@ -43,7 +43,7 @@ export default function ImageDetailPage() {
       <Space style={{ marginBottom: 24 }}>
         <Button
           icon={<ArrowLeftOutlined />}
-          onClick={() => navigate('/images')}
+          onClick={() => navigate(-1)}
         >
           목록
         </Button>

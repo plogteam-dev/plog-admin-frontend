@@ -22,7 +22,7 @@ export default function LogDetailPage() {
   return (
     <>
       <Space style={{ marginBottom: 24 }}>
-        <Button icon={<ArrowLeftOutlined />} onClick={() => navigate('/logs')}>
+        <Button icon={<ArrowLeftOutlined />} onClick={() => navigate(-1)}>
           목록
         </Button>
       </Space>

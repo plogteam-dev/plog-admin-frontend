@@ -40,7 +40,7 @@ export default function UserDetailPage() {
   return (
     <>
       <Space style={{ marginBottom: 24 }}>
-        <Button icon={<ArrowLeftOutlined />} onClick={() => navigate('/users')}>
+        <Button icon={<ArrowLeftOutlined />} onClick={() => navigate(-1)}>
           목록
         </Button>
         {user.deletedAt ? (

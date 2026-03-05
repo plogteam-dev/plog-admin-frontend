@@ -138,15 +138,32 @@ export interface Spot {
   id: string;
   name: string;
   caption: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  order: number;
   createdAt: string;
   deletedAt: string | null;
+  region1DepthName: string | null;
+  region2DepthName: string | null;
+  region3DepthName: string | null;
+  log?: {
+    id: string;
+    title: string;
+    user: { id: string; nickname: string; email?: string };
+  };
+  place?: { id: string; name: string } | null;
   spotImages: SpotImage[];
+  _count?: { spotImages?: number; reactions?: number };
 }
 
 export interface SpotImage {
   id: string;
-  key: string;
-  thumbnailKey: string;
+  image: {
+    id: string;
+    key: string;
+    thumbnailKey: string;
+    shotAt?: string;
+  };
 }
 
 export interface SpotListParams extends PaginationParams {

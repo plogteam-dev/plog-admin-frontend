@@ -7,60 +7,31 @@ import {
   Tag,
   Image,
   Empty,
-  App,
   Typography,
 } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { useSpot, useDeleteSpot, useRestoreSpot } from '@/hooks/useSpots';
+import { useSpot } from '@/hooks/useSpots';
 import { CDN_BASE } from '@/constants';
 import dayjs from 'dayjs';
 
 export default function SpotDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { message, modal } = App.useApp();
   const { data: spot, isLoading } = useSpot(id!);
-  const deleteSpot = useDeleteSpot();
-  const restoreSpot = useRestoreSpot();
 
   if (isLoading) return <Spin size="large" />;
   if (!spot) return <div>스팟을 찾을 수 없습니다.</div>;
 
-  const handleDelete = () => {
-    modal.confirm({
-      title: '스팟 삭제',
-      content: `"${spot.name}" 스팟을 삭제하시겠습니까?`,
-      okText: '삭제',
-      okType: 'danger',
-      onOk: () =>
-        deleteSpot.mutateAsync(spot.id).then(() => {
-          message.success('스팟이 삭제되었습니다.');
-          navigate('/spots');
-        }).catch(() => {
-          message.error('삭제에 실패했습니다.');
-        }),
-    });
-  };
-
-  const handleRestore = () => {
-    restoreSpot.mutate(spot.id, {
-      onSuccess: () => message.success('스팟이 복원되었습니다.'),
-    });
-  };
+  const region = [spot.region1DepthName, spot.region2DepthName, spot.region3DepthName]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <>
       <Space style={{ marginBottom: 24 }}>
-        <Button icon={<ArrowLeftOutlined />} onClick={() => navigate('/spots')}>
+        <Button icon={<ArrowLeftOutlined />} onClick={() => navigate(-1)}>
           목록
         </Button>
-        {spot.deletedAt ? (
-          <Button onClick={handleRestore}>복원</Button>
-        ) : (
-          <Button danger onClick={handleDelete}>
-            삭제
-          </Button>
-        )}
       </Space>
 
       <Descriptions bordered column={2} style={{ marginBottom: 24 }}>
@@ -68,8 +39,14 @@ export default function SpotDetailPage() {
         <Descriptions.Item label="설명">
           {spot.caption ?? '-'}
         </Descriptions.Item>
-        <Descriptions.Item label="생성일">
-          {dayjs(spot.createdAt).format('YYYY-MM-DD HH:mm')}
+        <Descriptions.Item label="로그">{spot.log?.title || '-'}</Descriptions.Item>
+        <Descriptions.Item label="작성자">{spot.log?.user?.nickname || '-'}</Descriptions.Item>
+        <Descriptions.Item label="지역">{region || '-'}</Descriptions.Item>
+        <Descriptions.Item label="장소">{spot.place?.name || '-'}</Descriptions.Item>
+        <Descriptions.Item label="좌표">
+          {spot.latitude && spot.longitude
+            ? `${spot.latitude}, ${spot.longitude}`
+            : '-'}
         </Descriptions.Item>
         <Descriptions.Item label="상태">
           {spot.deletedAt ? (
@@ -78,21 +55,29 @@ export default function SpotDetailPage() {
             <Tag color="green">활성</Tag>
           )}
         </Descriptions.Item>
+        <Descriptions.Item label="생성일">
+          {dayjs(spot.createdAt).format('YYYY-MM-DD HH:mm')}
+        </Descriptions.Item>
+        {spot.deletedAt && (
+          <Descriptions.Item label="삭제일">
+            {dayjs(spot.deletedAt).format('YYYY-MM-DD HH:mm')}
+          </Descriptions.Item>
+        )}
       </Descriptions>
 
       <Typography.Title level={5} style={{ marginBottom: 16 }}>
-        이미지 ({spot.spotImages.length}장)
+        이미지 ({spot.spotImages?.length ?? 0}장)
       </Typography.Title>
-      {spot.spotImages.length > 0 ? (
+      {spot.spotImages && spot.spotImages.length > 0 ? (
         <Image.PreviewGroup>
           <Space wrap>
-            {spot.spotImages.map((img) => (
+            {spot.spotImages.map((si: any) => (
               <Image
-                key={img.id}
+                key={si.id}
                 width={150}
                 height={150}
-                src={`${CDN_BASE}/${img.key}`}
-                fallback={`${CDN_BASE}/${img.thumbnailKey}`}
+                src={`${CDN_BASE}/${si.image?.thumbnailKey}`}
+                preview={{ src: `${CDN_BASE}/${si.image?.key}` }}
                 style={{ objectFit: 'cover', borderRadius: 8 }}
               />
             ))}
