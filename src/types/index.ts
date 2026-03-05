@@ -115,6 +115,7 @@ export interface Log {
   };
   // 상세 조회 시에만 포함
   spots?: LogSpot[];
+  participants?: Array<{ id: string; status: string; user: { id: string; nickname: string; email: string } }>;
 }
 
 export interface LogListParams extends PaginationParams {

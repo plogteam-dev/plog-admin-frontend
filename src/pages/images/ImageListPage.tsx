@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
-import { Table, Select, Space, Button, Tag, App, Image as AntImage, DatePicker } from 'antd';
-import { useImages, useDeleteImage, useRestoreImage } from '@/hooks/useImages';
+import { Table, Select, Space, Tag, Image as AntImage, DatePicker } from 'antd';
+import { useImages } from '@/hooks/useImages';
 import { CDN_BASE, PAGE_SIZE } from '@/constants';
-import type { EntityStatus, Image } from '@/types';
+import type { EntityStatus } from '@/types';
 import dayjs from 'dayjs';
 
 const { RangePicker } = DatePicker;
@@ -12,8 +12,6 @@ export default function ImageListPage() {
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState<EntityStatus | undefined>();
   const [dateRange, setDateRange] = useState<[string, string] | undefined>();
-  const { message, modal } = App.useApp();
-
   const { data, isLoading } = useImages({
     page,
     limit: PAGE_SIZE,
@@ -21,29 +19,6 @@ export default function ImageListPage() {
     dateFrom: dateRange?.[0],
     dateTo: dateRange?.[1],
   });
-  const deleteImage = useDeleteImage();
-  const restoreImage = useRestoreImage();
-
-  const handleDelete = (image: Image) => {
-    modal.confirm({
-      title: '이미지 삭제',
-      content: '이 이미지를 삭제하시겠습니까?',
-      okText: '삭제',
-      okType: 'danger',
-      onOk: () =>
-        deleteImage.mutateAsync(image.id).then(() => {
-          message.success('이미지가 삭제되었습니다.');
-        }).catch(() => {
-          message.error('삭제에 실패했습니다.');
-        }),
-    });
-  };
-
-  const handleRestore = (id: string) => {
-    restoreImage.mutate(id, {
-      onSuccess: () => message.success('이미지가 복원되었습니다.'),
-    });
-  };
 
   const columns = [
     {
@@ -75,20 +50,6 @@ export default function ImageListPage() {
       width: 80,
       render: (deletedAt: string | null) =>
         deletedAt ? <Tag color="red">삭제됨</Tag> : <Tag color="green">활성</Tag>,
-    },
-    {
-      title: '작업',
-      width: 120,
-      render: (_: unknown, record: Image) =>
-        record.deletedAt ? (
-          <Button size="small" onClick={() => handleRestore(record.id)}>
-            복원
-          </Button>
-        ) : (
-          <Button size="small" danger onClick={() => handleDelete(record)}>
-            삭제
-          </Button>
-        ),
     },
   ];
 

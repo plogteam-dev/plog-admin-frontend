@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
-import { Table, Input, Select, Space, Button, Tag, App } from 'antd';
+import { Table, Input, Select, Space, Tag } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import { useLogs, useDeleteLog, useRestoreLog } from '@/hooks/useLogs';
+import { useLogs } from '@/hooks/useLogs';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { PAGE_SIZE } from '@/constants';
 import type { EntityStatus, LogVisibility, LogType, Log } from '@/types';
@@ -15,7 +15,6 @@ export default function LogListPage() {
   const [visibility, setVisibility] = useState<LogVisibility | undefined>();
   const [type, setType] = useState<LogType | undefined>();
   const debouncedSearch = useDebouncedValue(search);
-  const { message, modal } = App.useApp();
 
   const { data, isLoading } = useLogs({
     page,
@@ -25,29 +24,6 @@ export default function LogListPage() {
     visibility,
     type,
   });
-  const deleteLog = useDeleteLog();
-  const restoreLog = useRestoreLog();
-
-  const handleDelete = (log: Log) => {
-    modal.confirm({
-      title: '로그 삭제',
-      content: `"${log.title}" 로그를 삭제하시겠습니까?`,
-      okText: '삭제',
-      okType: 'danger',
-      onOk: () =>
-        deleteLog.mutateAsync(log.id).then(() => {
-          message.success('로그가 삭제되었습니다.');
-        }).catch(() => {
-          message.error('삭제에 실패했습니다.');
-        }),
-    });
-  };
-
-  const handleRestore = (id: string) => {
-    restoreLog.mutate(id, {
-      onSuccess: () => message.success('로그가 복원되었습니다.'),
-    });
-  };
 
   const columns = [
     {
@@ -92,20 +68,6 @@ export default function LogListPage() {
       width: 80,
       render: (deletedAt: string | null) =>
         deletedAt ? <Tag color="red">삭제됨</Tag> : <Tag color="green">활성</Tag>,
-    },
-    {
-      title: '작업',
-      width: 120,
-      render: (_: unknown, record: Log) =>
-        record.deletedAt ? (
-          <Button size="small" onClick={() => handleRestore(record.id)}>
-            복원
-          </Button>
-        ) : (
-          <Button size="small" danger onClick={() => handleDelete(record)}>
-            삭제
-          </Button>
-        ),
     },
   ];
 
