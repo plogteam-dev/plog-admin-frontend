@@ -14,6 +14,7 @@ import SpotListPage from '@/pages/spots/SpotListPage';
 import SpotDetailPage from '@/pages/spots/SpotDetailPage';
 import ImageListPage from '@/pages/images/ImageListPage';
 import ImageDetailPage from '@/pages/images/ImageDetailPage';
+import SuggestionListPage from '@/pages/suggestions/SuggestionListPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -56,6 +57,7 @@ export default function App() {
                 <Route path="spots/:id" element={<SpotDetailPage />} />
                 <Route path="images" element={<ImageListPage />} />
                 <Route path="images/:id" element={<ImageDetailPage />} />
+                <Route path="suggestions" element={<SuggestionListPage />} />
               </Route>
             </Routes>
           </BrowserRouter>

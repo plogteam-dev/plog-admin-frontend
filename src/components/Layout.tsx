@@ -7,6 +7,7 @@ import {
   FileTextOutlined,
   EnvironmentOutlined,
   PictureOutlined,
+  BulbOutlined,
   LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -21,6 +22,7 @@ const menuItems = [
   { key: '/logs', icon: <FileTextOutlined />, label: '로그 관리' },
   { key: '/spots', icon: <EnvironmentOutlined />, label: '스팟 관리' },
   { key: '/images', icon: <PictureOutlined />, label: '이미지 관리' },
+  { key: '/suggestions', icon: <BulbOutlined />, label: '유저 제안' },
 ];
 
 export default function Layout() {
