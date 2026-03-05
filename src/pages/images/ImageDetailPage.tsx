@@ -2,9 +2,8 @@ import { useParams, useNavigate } from 'react-router';
 import { Descriptions, Spin, Button, Space, Tag, Image, App } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { useImage, useDeleteImage, useRestoreImage } from '@/hooks/useImages';
+import { CDN_BASE } from '@/constants';
 import dayjs from 'dayjs';
-
-const CDN_BASE = import.meta.env.VITE_CDN_BASE_URL || '';
 
 export default function ImageDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -27,6 +26,8 @@ export default function ImageDetailPage() {
         deleteImage.mutateAsync(image.id).then(() => {
           message.success('이미지가 삭제되었습니다.');
           navigate('/images');
+        }).catch(() => {
+          message.error('삭제에 실패했습니다.');
         }),
     });
   };

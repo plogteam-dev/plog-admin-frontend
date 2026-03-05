@@ -25,6 +25,8 @@ export default function UserDetailPage() {
         deleteUser.mutateAsync(user.id).then(() => {
           message.success('유저가 삭제되었습니다.');
           navigate('/users');
+        }).catch(() => {
+          message.error('삭제에 실패했습니다.');
         }),
     });
   };

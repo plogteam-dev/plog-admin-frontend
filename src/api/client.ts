@@ -17,13 +17,12 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
-// Response: 401 시 로그아웃 & 리다이렉트
+// Response: 401 시 로그아웃 (ProtectedRoute가 리다이렉트 처리)
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
       useAuthStore.getState().clearAuth();
-      window.location.href = '/login';
     }
     return Promise.reject(error);
   },

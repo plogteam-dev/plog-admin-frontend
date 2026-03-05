@@ -2,22 +2,21 @@ import { useState } from 'react';
 import { Link } from 'react-router';
 import { Table, Select, Space, Button, Tag, App, Image as AntImage, DatePicker } from 'antd';
 import { useImages, useDeleteImage, useRestoreImage } from '@/hooks/useImages';
-import type { ImageStatus, Image } from '@/types';
+import { CDN_BASE, PAGE_SIZE } from '@/constants';
+import type { EntityStatus, Image } from '@/types';
 import dayjs from 'dayjs';
 
 const { RangePicker } = DatePicker;
-const CDN_BASE = import.meta.env.VITE_CDN_BASE_URL || '';
 
 export default function ImageListPage() {
   const [page, setPage] = useState(1);
-  const [limit] = useState(20);
-  const [status, setStatus] = useState<ImageStatus | undefined>();
+  const [status, setStatus] = useState<EntityStatus | undefined>();
   const [dateRange, setDateRange] = useState<[string, string] | undefined>();
   const { message, modal } = App.useApp();
 
   const { data, isLoading } = useImages({
     page,
-    limit,
+    limit: PAGE_SIZE,
     status,
     dateFrom: dateRange?.[0],
     dateTo: dateRange?.[1],
@@ -34,6 +33,8 @@ export default function ImageListPage() {
       onOk: () =>
         deleteImage.mutateAsync(image.id).then(() => {
           message.success('이미지가 삭제되었습니다.');
+        }).catch(() => {
+          message.error('삭제에 실패했습니다.');
         }),
     });
   };
@@ -127,7 +128,7 @@ export default function ImageListPage() {
         pagination={{
           current: data?.page,
           total: data?.total,
-          pageSize: limit,
+          pageSize: PAGE_SIZE,
           onChange: setPage,
           showTotal: (total) => `총 ${total}개`,
         }}

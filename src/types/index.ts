@@ -54,9 +54,11 @@ export interface DashboardStats {
   newLogsToday: number;
 }
 
+// 공통
+export type EntityStatus = 'active' | 'deleted';
+
 // 유저
 export type Gender = 'male' | 'female' | null;
-export type UserStatus = 'active' | 'deleted';
 
 export interface User {
   id: string;
@@ -74,7 +76,7 @@ export interface User {
 
 export interface UserListParams extends PaginationParams {
   search?: string;
-  status?: UserStatus;
+  status?: EntityStatus;
 }
 
 export interface UserUpdateRequest {
@@ -85,7 +87,6 @@ export interface UserUpdateRequest {
 // 로그
 export type LogVisibility = 'private' | 'public' | 'buddies';
 export type LogType = 'INDIVIDUAL' | 'BUDDY';
-export type LogStatus = 'active' | 'deleted';
 
 export interface LogSpot {
   id: string;
@@ -123,7 +124,7 @@ export interface LogListParams extends PaginationParams {
   type?: LogType;
   dateFrom?: string;
   dateTo?: string;
-  status?: LogStatus;
+  status?: EntityStatus;
 }
 
 export interface LogUpdateRequest {
@@ -132,8 +133,6 @@ export interface LogUpdateRequest {
 }
 
 // 스팟
-export type SpotStatus = 'active' | 'deleted';
-
 export interface Spot {
   id: string;
   name: string;
@@ -152,7 +151,7 @@ export interface SpotImage {
 export interface SpotListParams extends PaginationParams {
   search?: string;
   logId?: string;
-  status?: SpotStatus;
+  status?: EntityStatus;
 }
 
 export interface SpotUpdateRequest {
@@ -161,8 +160,6 @@ export interface SpotUpdateRequest {
 }
 
 // 이미지
-export type ImageStatus = 'active' | 'deleted';
-
 export interface Image {
   id: string;
   key: string;
@@ -175,5 +172,5 @@ export interface ImageListParams extends PaginationParams {
   userId?: string;
   dateFrom?: string;
   dateTo?: string;
-  status?: ImageStatus;
+  status?: EntityStatus;
 }

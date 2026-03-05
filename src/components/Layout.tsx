@@ -27,7 +27,8 @@ export default function Layout() {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const { admin, clearAuth } = useAuthStore();
+  const admin = useAuthStore((s) => s.admin);
+  const clearAuth = useAuthStore((s) => s.clearAuth);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();

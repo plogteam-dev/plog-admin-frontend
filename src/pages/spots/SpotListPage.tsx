@@ -3,17 +3,19 @@ import { Link } from 'react-router';
 import { Table, Input, Select, Space, Button, Tag, App } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useSpots, useDeleteSpot, useRestoreSpot } from '@/hooks/useSpots';
-import type { SpotStatus, Spot } from '@/types';
+import { useDebouncedValue } from '@/hooks/useDebouncedValue';
+import { PAGE_SIZE } from '@/constants';
+import type { EntityStatus, Spot, SpotImage } from '@/types';
 import dayjs from 'dayjs';
 
 export default function SpotListPage() {
   const [page, setPage] = useState(1);
-  const [limit] = useState(20);
   const [search, setSearch] = useState('');
-  const [status, setStatus] = useState<SpotStatus | undefined>();
+  const [status, setStatus] = useState<EntityStatus | undefined>();
+  const debouncedSearch = useDebouncedValue(search);
   const { message, modal } = App.useApp();
 
-  const { data, isLoading } = useSpots({ page, limit, search, status });
+  const { data, isLoading } = useSpots({ page, limit: PAGE_SIZE, search: debouncedSearch, status });
   const deleteSpot = useDeleteSpot();
   const restoreSpot = useRestoreSpot();
 
@@ -26,6 +28,8 @@ export default function SpotListPage() {
       onOk: () =>
         deleteSpot.mutateAsync(spot.id).then(() => {
           message.success('스팟이 삭제되었습니다.');
+        }).catch(() => {
+          message.error('삭제에 실패했습니다.');
         }),
     });
   };
@@ -54,7 +58,7 @@ export default function SpotListPage() {
       title: '이미지 수',
       dataIndex: 'spotImages',
       width: 90,
-      render: (images: unknown[]) => images?.length ?? 0,
+      render: (images: SpotImage[]) => images?.length ?? 0,
     },
     {
       title: '생성일',
@@ -121,7 +125,7 @@ export default function SpotListPage() {
         pagination={{
           current: data?.page,
           total: data?.total,
-          pageSize: limit,
+          pageSize: PAGE_SIZE,
           onChange: setPage,
           showTotal: (total) => `총 ${total}개`,
         }}

@@ -12,9 +12,8 @@ import {
 } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { useSpot, useDeleteSpot, useRestoreSpot } from '@/hooks/useSpots';
+import { CDN_BASE } from '@/constants';
 import dayjs from 'dayjs';
-
-const CDN_BASE = import.meta.env.VITE_CDN_BASE_URL || '';
 
 export default function SpotDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -37,6 +36,8 @@ export default function SpotDetailPage() {
         deleteSpot.mutateAsync(spot.id).then(() => {
           message.success('스팟이 삭제되었습니다.');
           navigate('/spots');
+        }).catch(() => {
+          message.error('삭제에 실패했습니다.');
         }),
     });
   };

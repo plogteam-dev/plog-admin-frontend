@@ -3,17 +3,19 @@ import { Link } from 'react-router';
 import { Table, Input, Select, Space, Button, Tag, App, Avatar } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useUsers, useDeleteUser, useRestoreUser } from '@/hooks/useUsers';
-import type { UserStatus, User } from '@/types';
+import { useDebouncedValue } from '@/hooks/useDebouncedValue';
+import { PAGE_SIZE } from '@/constants';
+import type { EntityStatus, User } from '@/types';
 import dayjs from 'dayjs';
 
 export default function UserListPage() {
   const [page, setPage] = useState(1);
-  const [limit] = useState(20);
   const [search, setSearch] = useState('');
-  const [status, setStatus] = useState<UserStatus | undefined>();
+  const [status, setStatus] = useState<EntityStatus | undefined>();
+  const debouncedSearch = useDebouncedValue(search);
   const { message, modal } = App.useApp();
 
-  const { data, isLoading } = useUsers({ page, limit, search, status });
+  const { data, isLoading } = useUsers({ page, limit: PAGE_SIZE, search: debouncedSearch, status });
   const deleteUser = useDeleteUser();
   const restoreUser = useRestoreUser();
 
@@ -26,6 +28,8 @@ export default function UserListPage() {
       onOk: () =>
         deleteUser.mutateAsync(user.id).then(() => {
           message.success('유저가 삭제되었습니다.');
+        }).catch(() => {
+          message.error('삭제에 실패했습니다.');
         }),
     });
   };
@@ -126,7 +130,7 @@ export default function UserListPage() {
         pagination={{
           current: data?.page,
           total: data?.total,
-          pageSize: limit,
+          pageSize: PAGE_SIZE,
           onChange: setPage,
           showTotal: (total) => `총 ${total}명`,
         }}
