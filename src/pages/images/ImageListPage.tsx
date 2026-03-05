@@ -1,23 +1,25 @@
-import { useState } from 'react';
 import { Link } from 'react-router';
 import { Table, Select, Space, Tag, Image as AntImage, DatePicker } from 'antd';
 import { useImages } from '@/hooks/useImages';
 import { CDN_BASE, PAGE_SIZE } from '@/constants';
-import type { EntityStatus } from '@/types';
+import { useQueryParams } from '@/hooks/useSearchParams';
 import dayjs from 'dayjs';
 
 const { RangePicker } = DatePicker;
 
 export default function ImageListPage() {
-  const [page, setPage] = useState(1);
-  const [status, setStatus] = useState<EntityStatus | undefined>();
-  const [dateRange, setDateRange] = useState<[string, string] | undefined>();
+  const { get, getNumber, set } = useQueryParams();
+  const page = getNumber('page', 1);
+  const status = get('status');
+  const dateFrom = get('dateFrom');
+  const dateTo = get('dateTo');
+
   const { data, isLoading } = useImages({
     page,
     limit: PAGE_SIZE,
-    status,
-    dateFrom: dateRange?.[0],
-    dateTo: dateRange?.[1],
+    status: status as any,
+    dateFrom,
+    dateTo,
   });
 
   const columns = [
@@ -59,10 +61,7 @@ export default function ImageListPage() {
         <Select
           placeholder="상태"
           value={status}
-          onChange={(val) => {
-            setStatus(val);
-            setPage(1);
-          }}
+          onChange={(val) => set({ status: val, page: '1' })}
           allowClear
           style={{ width: 120 }}
           options={[
@@ -73,11 +72,10 @@ export default function ImageListPage() {
         <RangePicker
           onChange={(_, dateStrings) => {
             if (dateStrings[0] && dateStrings[1]) {
-              setDateRange(dateStrings as [string, string]);
+              set({ dateFrom: dateStrings[0], dateTo: dateStrings[1], page: '1' });
             } else {
-              setDateRange(undefined);
+              set({ dateFrom: undefined, dateTo: undefined, page: '1' });
             }
-            setPage(1);
           }}
         />
       </Space>
@@ -87,10 +85,10 @@ export default function ImageListPage() {
         dataSource={data?.items}
         loading={isLoading}
         pagination={{
-          current: data?.page,
+          current: page,
           total: data?.total,
           pageSize: PAGE_SIZE,
-          onChange: setPage,
+          onChange: (p) => set({ page: String(p) }),
           showTotal: (total) => `총 ${total}개`,
         }}
       />

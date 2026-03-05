@@ -1,20 +1,21 @@
-import { useState } from 'react';
 import { Link } from 'react-router';
 import { Table, Input, Select, Space, Tag, Avatar } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useUsers } from '@/hooks/useUsers';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
+import { useQueryParams } from '@/hooks/useSearchParams';
 import { PAGE_SIZE } from '@/constants';
-import type { EntityStatus, User } from '@/types';
+import type { User } from '@/types';
 import dayjs from 'dayjs';
 
 export default function UserListPage() {
-  const [page, setPage] = useState(1);
-  const [search, setSearch] = useState('');
-  const [status, setStatus] = useState<EntityStatus | undefined>();
+  const { get, getNumber, set } = useQueryParams();
+  const page = getNumber('page', 1);
+  const search = get('search') ?? '';
+  const status = get('status');
   const debouncedSearch = useDebouncedValue(search);
 
-  const { data, isLoading } = useUsers({ page, limit: PAGE_SIZE, search: debouncedSearch, status });
+  const { data, isLoading } = useUsers({ page, limit: PAGE_SIZE, search: debouncedSearch, status: status as any });
 
   const columns = [
     {
@@ -62,20 +63,14 @@ export default function UserListPage() {
           placeholder="닉네임/이메일 검색"
           prefix={<SearchOutlined />}
           value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            setPage(1);
-          }}
+          onChange={(e) => set({ search: e.target.value, page: '1' })}
           allowClear
           style={{ width: 250 }}
         />
         <Select
           placeholder="상태"
           value={status}
-          onChange={(val) => {
-            setStatus(val);
-            setPage(1);
-          }}
+          onChange={(val) => set({ status: val, page: '1' })}
           allowClear
           style={{ width: 120 }}
           options={[
@@ -90,10 +85,10 @@ export default function UserListPage() {
         dataSource={data?.items}
         loading={isLoading}
         pagination={{
-          current: data?.page,
+          current: page,
           total: data?.total,
           pageSize: PAGE_SIZE,
-          onChange: setPage,
+          onChange: (p) => set({ page: String(p) }),
           showTotal: (total) => `총 ${total}명`,
         }}
       />

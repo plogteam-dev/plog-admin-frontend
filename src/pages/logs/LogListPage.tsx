@@ -1,26 +1,27 @@
-import { useState } from 'react';
 import { Link } from 'react-router';
 import { Table, Input, Select, Space, Tag } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useLogs } from '@/hooks/useLogs';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
+import { useQueryParams } from '@/hooks/useSearchParams';
 import { PAGE_SIZE } from '@/constants';
-import type { EntityStatus, LogVisibility, LogType, Log } from '@/types';
+import type { LogVisibility, LogType, Log } from '@/types';
 import dayjs from 'dayjs';
 
 export default function LogListPage() {
-  const [page, setPage] = useState(1);
-  const [search, setSearch] = useState('');
-  const [status, setStatus] = useState<EntityStatus | undefined>();
-  const [visibility, setVisibility] = useState<LogVisibility | undefined>();
-  const [type, setType] = useState<LogType | undefined>();
+  const { get, getNumber, set } = useQueryParams();
+  const page = getNumber('page', 1);
+  const search = get('search') ?? '';
+  const status = get('status');
+  const visibility = get('visibility') as LogVisibility | undefined;
+  const type = get('type') as LogType | undefined;
   const debouncedSearch = useDebouncedValue(search);
 
   const { data, isLoading } = useLogs({
     page,
     limit: PAGE_SIZE,
     search: debouncedSearch,
-    status,
+    status: status as any,
     visibility,
     type,
   });
@@ -78,20 +79,14 @@ export default function LogListPage() {
           placeholder="제목 검색"
           prefix={<SearchOutlined />}
           value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            setPage(1);
-          }}
+          onChange={(e) => set({ search: e.target.value, page: '1' })}
           allowClear
           style={{ width: 200 }}
         />
         <Select
           placeholder="상태"
           value={status}
-          onChange={(val) => {
-            setStatus(val);
-            setPage(1);
-          }}
+          onChange={(val) => set({ status: val, page: '1' })}
           allowClear
           style={{ width: 120 }}
           options={[
@@ -102,10 +97,7 @@ export default function LogListPage() {
         <Select
           placeholder="공개 범위"
           value={visibility}
-          onChange={(val) => {
-            setVisibility(val);
-            setPage(1);
-          }}
+          onChange={(val) => set({ visibility: val, page: '1' })}
           allowClear
           style={{ width: 120 }}
           options={[
@@ -117,10 +109,7 @@ export default function LogListPage() {
         <Select
           placeholder="타입"
           value={type}
-          onChange={(val) => {
-            setType(val);
-            setPage(1);
-          }}
+          onChange={(val) => set({ type: val, page: '1' })}
           allowClear
           style={{ width: 120 }}
           options={[
@@ -135,10 +124,10 @@ export default function LogListPage() {
         dataSource={data?.items}
         loading={isLoading}
         pagination={{
-          current: data?.page,
+          current: page,
           total: data?.total,
           pageSize: PAGE_SIZE,
-          onChange: setPage,
+          onChange: (p) => set({ page: String(p) }),
           showTotal: (total) => `총 ${total}개`,
         }}
       />
