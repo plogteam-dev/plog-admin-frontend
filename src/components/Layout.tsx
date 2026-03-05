@@ -57,7 +57,7 @@ export default function Layout() {
             fontWeight: 700,
           }}
         >
-          {collapsed ? 'P' : 'Plog Admin'}
+          {collapsed ? 'R' : 'Rilo Admin'}
         </div>
         <Menu
           theme="dark"

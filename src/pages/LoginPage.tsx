@@ -33,7 +33,7 @@ export default function LoginPage() {
     >
       <Card style={{ width: 400 }}>
         <Typography.Title level={3} style={{ textAlign: 'center' }}>
-          Plog Admin
+          Rilo Admin
         </Typography.Title>
         <Form onFinish={onFinish} size="large">
           <Form.Item
