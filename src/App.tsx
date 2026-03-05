@@ -36,7 +36,7 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <ConfigProvider locale={koKR}>
         <AntApp>
-          <BrowserRouter>
+          <BrowserRouter basename="/plog-admin-frontend">
             <Routes>
               <Route path="/login" element={<LoginPage />} />
               <Route
