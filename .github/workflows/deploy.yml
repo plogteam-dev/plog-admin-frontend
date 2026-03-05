@@ -31,6 +31,7 @@ jobs:
       - run: npm run build
         env:
           VITE_API_BASE_URL: https://api.rilo.life
+          VITE_CDN_BASE_URL: https://d2sra7137mn77d.cloudfront.net
       - run: cp dist/index.html dist/404.html
 
       - uses: actions/configure-pages@v4
