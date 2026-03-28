@@ -54,6 +54,21 @@ export interface DashboardStats {
   newLogsToday: number;
 }
 
+export interface DailyStatsItem {
+  date: string;
+  newUsers: number;
+  newLogs: number;
+}
+
+export interface DailyStatsResponse {
+  items: DailyStatsItem[];
+}
+
+export interface DailyStatsParams {
+  from?: string;
+  to?: string;
+}
+
 // 공통
 export type EntityStatus = 'active' | 'deleted';
 
