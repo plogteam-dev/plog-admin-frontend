@@ -207,3 +207,74 @@ export interface ImageListParams extends PaginationParams {
   dateTo?: string;
   status?: EntityStatus;
 }
+
+// 신고 (Report)
+export type ReportTargetType = 'log' | 'comment' | 'user';
+export type ReportStatus = 'pending' | 'reviewed' | 'actioned';
+export type ReportReason =
+  | 'spam'
+  | 'harassment'
+  | 'sexual_content'
+  | 'violence'
+  | 'hate_speech'
+  | 'impersonation'
+  | 'other';
+
+// 신고된 댓글 (admin/reports 상세에서 포함)
+export interface ReportComment {
+  id: string;
+  content: string;
+  createdAt: string;
+  deletedAt: string | null;
+  user: {
+    id: string;
+    nickname: string;
+    email: string;
+  };
+  // 댓글 신고 → 부모 로그(/logs/:id) 링크용
+  spot?: {
+    logId: string;
+  } | null;
+}
+
+export interface Report {
+  id: number;
+  reporterId: string;
+  targetType: ReportTargetType;
+  logId: string | null;
+  commentId: string | null;
+  reportedUserId: string | null;
+  reason: ReportReason;
+  detail: string | null;
+  status: ReportStatus;
+  createdAt: string;
+  // include로 함께 로딩되는 관계 (목록: 요약 / 상세: 실물)
+  reporter: {
+    id: string;
+    nickname: string;
+    email: string;
+  };
+  log?: {
+    id: string;
+    title: string;
+    deletedAt: string | null;
+    user: { id: string; nickname: string; email: string };
+  } | null;
+  comment?: ReportComment | null;
+  reportedUser?: {
+    id: string;
+    nickname: string;
+    email: string;
+    deletedAt: string | null;
+  } | null;
+}
+
+export interface ReportListParams extends PaginationParams {
+  status?: ReportStatus;
+  targetType?: ReportTargetType;
+  reason?: ReportReason;
+}
+
+export interface ReportUpdateRequest {
+  status: Exclude<ReportStatus, 'pending'>;
+}
