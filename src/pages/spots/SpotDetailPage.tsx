@@ -4,7 +4,6 @@ import {
   Spin,
   Button,
   Space,
-  Tag,
   Image,
   Empty,
   Typography,
@@ -12,6 +11,8 @@ import {
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { useSpot } from '@/hooks/useSpots';
 import { CDN_BASE } from '@/constants';
+import DeletionStatusTag from '@/components/DeletionStatusTag';
+import type { SpotImage } from '@/types';
 import dayjs from 'dayjs';
 
 export default function SpotDetailPage() {
@@ -49,18 +50,19 @@ export default function SpotDetailPage() {
             : '-'}
         </Descriptions.Item>
         <Descriptions.Item label="상태">
-          {spot.deletedAt ? (
-            <Tag color="red">삭제됨</Tag>
-          ) : (
-            <Tag color="green">활성</Tag>
-          )}
+          <DeletionStatusTag
+            deletedAt={spot.deletedAt}
+            deletedByLog={spot.deletedByLog}
+          />
         </Descriptions.Item>
         <Descriptions.Item label="생성일">
           {dayjs(spot.createdAt).format('YYYY-MM-DD HH:mm')}
         </Descriptions.Item>
         {spot.deletedAt && (
-          <Descriptions.Item label="삭제일">
-            {dayjs(spot.deletedAt).format('YYYY-MM-DD HH:mm')}
+          <Descriptions.Item label={spot.deletedByLog ? '로그 삭제일' : '삭제일'}>
+            {dayjs(spot.deletedByLog ? spot.logDeletedAt : spot.deletedAt).format(
+              'YYYY-MM-DD HH:mm',
+            )}
           </Descriptions.Item>
         )}
       </Descriptions>
@@ -70,16 +72,23 @@ export default function SpotDetailPage() {
       </Typography.Title>
       {spot.spotImages && spot.spotImages.length > 0 ? (
         <Image.PreviewGroup>
-          <Space wrap>
-            {spot.spotImages.map((si: any) => (
-              <Image
-                key={si.id}
-                width={150}
-                height={150}
-                src={`${CDN_BASE}/${si.image?.thumbnailKey}`}
-                preview={{ src: `${CDN_BASE}/${si.image?.key}` }}
-                style={{ objectFit: 'cover', borderRadius: 8 }}
-              />
+          <Space wrap align="start">
+            {spot.spotImages.map((si: SpotImage) => (
+              <Space key={si.id} direction="vertical" size={4} align="center">
+                <Image
+                  width={150}
+                  height={150}
+                  src={`${CDN_BASE}/${si.image?.thumbnailKey}`}
+                  preview={{ src: `${CDN_BASE}/${si.image?.key}` }}
+                  style={{ objectFit: 'cover', borderRadius: 8 }}
+                />
+                <DeletionStatusTag
+                  deletedAt={si.deletedAt}
+                  deletedByLog={si.deletedByLog}
+                  byLogLabel="상위 삭제됨"
+                  hideActive
+                />
+              </Space>
             ))}
           </Space>
         </Image.PreviewGroup>

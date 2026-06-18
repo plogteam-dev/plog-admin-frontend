@@ -1,7 +1,8 @@
 import { Link } from 'react-router';
-import { Table, Input, Select, Space, Tag } from 'antd';
+import { Table, Input, Select, Space } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useSpots } from '@/hooks/useSpots';
+import DeletionStatusTag from '@/components/DeletionStatusTag';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { useQueryParams } from '@/hooks/useSearchParams';
 import { PAGE_SIZE } from '@/constants';
@@ -54,9 +55,13 @@ export default function SpotListPage() {
     {
       title: '상태',
       dataIndex: 'deletedAt',
-      width: 80,
-      render: (deletedAt: string | null) =>
-        deletedAt ? <Tag color="red">삭제됨</Tag> : <Tag color="green">활성</Tag>,
+      width: 100,
+      render: (_: string | null, record: Spot) => (
+        <DeletionStatusTag
+          deletedAt={record.deletedAt}
+          deletedByLog={record.deletedByLog}
+        />
+      ),
     },
   ];
 

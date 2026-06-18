@@ -107,7 +107,10 @@ export interface LogSpot {
   id: string;
   name: string;
   caption: string | null;
-  spotImages: Array<{ id: string; key: string; thumbnailKey: string }>;
+  deletedAt: string | null;
+  logDeletedAt: string | null;
+  deletedByLog: boolean;
+  spotImages: SpotImage[];
 }
 
 export interface Log {
@@ -158,6 +161,8 @@ export interface Spot {
   order: number;
   createdAt: string;
   deletedAt: string | null;
+  logDeletedAt: string | null;
+  deletedByLog: boolean;
   region1DepthName: string | null;
   region2DepthName: string | null;
   region3DepthName: string | null;
@@ -173,6 +178,9 @@ export interface Spot {
 
 export interface SpotImage {
   id: string;
+  deletedAt: string | null;
+  logDeletedAt: string | null;
+  deletedByLog: boolean;
   image: {
     id: string;
     key: string;
@@ -199,6 +207,8 @@ export interface Image {
   thumbnailKey: string;
   createdAt: string;
   deletedAt: string | null;
+  logDeletedAt: string | null;
+  deletedByLog: boolean;
 }
 
 export interface ImageListParams extends PaginationParams {

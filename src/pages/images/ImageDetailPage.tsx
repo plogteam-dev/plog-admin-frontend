@@ -1,8 +1,9 @@
 import { useParams, useNavigate } from 'react-router';
-import { Descriptions, Spin, Button, Space, Tag, Image, App } from 'antd';
+import { Descriptions, Spin, Button, Space, Image, App } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { useImage, useDeleteImage, useRestoreImage } from '@/hooks/useImages';
 import { CDN_BASE } from '@/constants';
+import DeletionStatusTag from '@/components/DeletionStatusTag';
 import dayjs from 'dayjs';
 
 export default function ImageDetailPage() {
@@ -47,7 +48,7 @@ export default function ImageDetailPage() {
         >
           목록
         </Button>
-        {image.deletedAt ? (
+        {image.deletedAt && !image.deletedByLog ? (
           <Button onClick={handleRestore}>복원</Button>
         ) : (
           <Button danger onClick={handleDelete}>
@@ -64,18 +65,20 @@ export default function ImageDetailPage() {
         <Descriptions bordered column={2}>
           <Descriptions.Item label="ID">{image.id}</Descriptions.Item>
           <Descriptions.Item label="상태">
-            {image.deletedAt ? (
-              <Tag color="red">삭제됨</Tag>
-            ) : (
-              <Tag color="green">활성</Tag>
-            )}
+            <DeletionStatusTag
+              deletedAt={image.deletedAt}
+              deletedByLog={image.deletedByLog}
+              byLogLabel="상위 삭제됨"
+            />
           </Descriptions.Item>
           <Descriptions.Item label="생성일">
             {dayjs(image.createdAt).format('YYYY-MM-DD HH:mm')}
           </Descriptions.Item>
           {image.deletedAt && (
-            <Descriptions.Item label="삭제일">
-              {dayjs(image.deletedAt).format('YYYY-MM-DD HH:mm')}
+            <Descriptions.Item label={image.deletedByLog ? '상위 삭제일' : '삭제일'}>
+              {dayjs(image.deletedByLog ? image.logDeletedAt : image.deletedAt).format(
+                'YYYY-MM-DD HH:mm',
+              )}
             </Descriptions.Item>
           )}
         </Descriptions>

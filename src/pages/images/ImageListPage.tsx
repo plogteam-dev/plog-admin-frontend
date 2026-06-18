@@ -1,8 +1,10 @@
 import { Link } from 'react-router';
-import { Table, Select, Space, Tag, Image as AntImage, DatePicker } from 'antd';
+import { Table, Select, Space, Image as AntImage, DatePicker } from 'antd';
 import { useImages } from '@/hooks/useImages';
 import { CDN_BASE, PAGE_SIZE } from '@/constants';
 import { useQueryParams } from '@/hooks/useSearchParams';
+import DeletionStatusTag from '@/components/DeletionStatusTag';
+import type { Image } from '@/types';
 import dayjs from 'dayjs';
 
 const { RangePicker } = DatePicker;
@@ -49,9 +51,14 @@ export default function ImageListPage() {
     {
       title: '상태',
       dataIndex: 'deletedAt',
-      width: 80,
-      render: (deletedAt: string | null) =>
-        deletedAt ? <Tag color="red">삭제됨</Tag> : <Tag color="green">활성</Tag>,
+      width: 110,
+      render: (_: string | null, record: Image) => (
+        <DeletionStatusTag
+          deletedAt={record.deletedAt}
+          deletedByLog={record.deletedByLog}
+          byLogLabel="상위 삭제됨"
+        />
+      ),
     },
   ];
 

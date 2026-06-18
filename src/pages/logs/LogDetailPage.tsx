@@ -3,6 +3,8 @@ import { Descriptions, Spin, Button, Space, Tag, List, Image as AntImage } from 
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { useLog } from '@/hooks/useLogs';
 import { CDN_BASE } from '@/constants';
+import DeletionStatusTag from '@/components/DeletionStatusTag';
+import type { LogSpot } from '@/types';
 import dayjs from 'dayjs';
 
 const visibilityLabel: Record<string, string> = {
@@ -62,21 +64,37 @@ export default function LogDetailPage() {
           <h3 style={{ marginTop: 32 }}>스팟 목록</h3>
           <List
             dataSource={log.spots}
-            renderItem={(spot: any) => (
+            renderItem={(spot: LogSpot) => (
               <List.Item>
                 <List.Item.Meta
-                  title={spot.name}
+                  title={
+                    <Space>
+                      {spot.name}
+                      <DeletionStatusTag
+                        deletedAt={spot.deletedAt}
+                        deletedByLog={spot.deletedByLog}
+                        hideActive
+                      />
+                    </Space>
+                  }
                   description={spot.caption}
                 />
                 <AntImage.PreviewGroup>
-                  <Space>
-                    {spot.spotImages?.map((si: any) => (
-                      <AntImage
-                        key={si.id}
-                        width={80}
-                        src={`${CDN_BASE}/${si.image?.thumbnailKey}`}
-                        preview={{ src: `${CDN_BASE}/${si.image?.key}` }}
-                      />
+                  <Space align="start">
+                    {spot.spotImages?.map((si) => (
+                      <Space key={si.id} direction="vertical" size={4} align="center">
+                        <AntImage
+                          width={80}
+                          src={`${CDN_BASE}/${si.image?.thumbnailKey}`}
+                          preview={{ src: `${CDN_BASE}/${si.image?.key}` }}
+                        />
+                        <DeletionStatusTag
+                          deletedAt={si.deletedAt}
+                          deletedByLog={si.deletedByLog}
+                          byLogLabel="상위 삭제됨"
+                          hideActive
+                        />
+                      </Space>
                     ))}
                   </Space>
                 </AntImage.PreviewGroup>
