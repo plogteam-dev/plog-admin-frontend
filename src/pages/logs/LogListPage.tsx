@@ -81,7 +81,7 @@ export default function LogListPage() {
     <>
       <Space style={{ marginBottom: 16 }} wrap>
         <Input
-          placeholder="제목 검색"
+          placeholder="제목/작성자 검색"
           prefix={<SearchOutlined />}
           value={search}
           onChange={(e) => set({ search: e.target.value, page: '1' })}
