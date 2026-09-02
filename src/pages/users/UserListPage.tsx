@@ -5,6 +5,7 @@ import { useUsers } from '@/hooks/useUsers';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { useQueryParams } from '@/hooks/useSearchParams';
 import { PAGE_SIZE } from '@/constants';
+import CountWithDeleted from '@/components/CountWithDeleted';
 import type { User } from '@/types';
 import dayjs from 'dayjs';
 
@@ -33,14 +34,23 @@ export default function UserListPage() {
     },
     { title: '이메일', dataIndex: 'email' },
     {
-      title: '로그 수',
+      title: '총 로그 수 (삭제 수)',
       dataIndex: ['_count', 'logs'],
-      width: 80,
+      width: 140,
+      render: (total: number, record: User) => (
+        <CountWithDeleted total={total} deleted={record._deletedCount?.logs} />
+      ),
     },
     {
-      title: '스팟 수',
+      title: '총 스팟 수 (삭제 수)',
       dataIndex: ['_count', 'createdSpots'],
-      width: 80,
+      width: 140,
+      render: (total: number, record: User) => (
+        <CountWithDeleted
+          total={total}
+          deleted={record._deletedCount?.createdSpots}
+        />
+      ),
     },
     {
       title: '가입일',

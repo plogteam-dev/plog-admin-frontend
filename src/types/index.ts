@@ -87,6 +87,14 @@ export interface User {
     logs: number;
     createdSpots: number;
   };
+  /**
+   * `_count`는 소프트 삭제된 것까지 포함한 총 생성 수이고,
+   * 그중 삭제된 수가 여기에 담긴다. (스팟은 부모 로그 삭제도 삭제로 취급)
+   */
+  _deletedCount?: {
+    logs: number;
+    createdSpots: number;
+  };
 }
 
 export interface UserListParams extends PaginationParams {
