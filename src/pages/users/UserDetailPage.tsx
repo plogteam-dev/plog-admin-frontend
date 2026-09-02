@@ -1,7 +1,8 @@
 import { useParams, useNavigate } from 'react-router';
-import { Descriptions, Spin, Button, Space, Avatar, Tag, App } from 'antd';
+import { Descriptions, Spin, Button, Space, Avatar, Tag, Tooltip, App } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { useUser, useDeleteUser, useRestoreUser } from '@/hooks/useUsers';
+import { useLogs } from '@/hooks/useLogs';
 import dayjs from 'dayjs';
 
 export default function UserDetailPage() {
@@ -9,11 +10,20 @@ export default function UserDetailPage() {
   const navigate = useNavigate();
   const { message, modal } = App.useApp();
   const { data: user, isLoading } = useUser(id!);
+  // _count.logs는 삭제된 로그까지 포함한 생성 수라서, 삭제 수는 따로 조회한다.
+  const { data: deletedLogs } = useLogs({
+    userId: id!,
+    status: 'deleted',
+    page: 1,
+    limit: 1,
+  });
   const deleteUser = useDeleteUser();
   const restoreUser = useRestoreUser();
 
   if (isLoading) return <Spin size="large" />;
   if (!user) return <div>유저를 찾을 수 없습니다.</div>;
+
+  const deletedCount = deletedLogs?.total;
 
   const handleDelete = () => {
     modal.confirm({
@@ -72,7 +82,14 @@ export default function UserDetailPage() {
           )}
         </Descriptions.Item>
         <Descriptions.Item label="로그 수">
-          {user._count.logs}
+          <Tooltip title={`생성 ${user._count.logs} / 삭제 ${deletedCount ?? 0}`}>
+            <span>
+              {user._count.logs}
+              {!!deletedCount && (
+                <span style={{ color: '#ff4d4f' }}>({deletedCount})</span>
+              )}
+            </span>
+          </Tooltip>
         </Descriptions.Item>
         <Descriptions.Item label="스팟 수">
           {user._count.createdSpots}
