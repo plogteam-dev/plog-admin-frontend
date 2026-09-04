@@ -48,7 +48,6 @@ export default function LogDetailPage() {
           )}
         </Descriptions.Item>
         <Descriptions.Item label="스팟 수">{log.spots?.length ?? 0}</Descriptions.Item>
-        <Descriptions.Item label="참여자 수">{log.participants?.length ?? 0}</Descriptions.Item>
         <Descriptions.Item label="생성일">
           {dayjs(log.createdAt).format('YYYY-MM-DD HH:mm')}
         </Descriptions.Item>
