@@ -5,7 +5,7 @@ import { useLogs } from '@/hooks/useLogs';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { useQueryParams } from '@/hooks/useSearchParams';
 import { PAGE_SIZE } from '@/constants';
-import type { LogVisibility, LogType, Log } from '@/types';
+import type { LogVisibility, Log } from '@/types';
 import dayjs from 'dayjs';
 
 export default function LogListPage() {
@@ -14,7 +14,6 @@ export default function LogListPage() {
   const search = get('search') ?? '';
   const status = get('status');
   const visibility = get('visibility') as LogVisibility | undefined;
-  const type = get('type') as LogType | undefined;
   const debouncedSearch = useDebouncedValue(search);
 
   const { data, isLoading } = useLogs({
@@ -23,7 +22,6 @@ export default function LogListPage() {
     search: debouncedSearch,
     status: status as any,
     visibility,
-    type,
   });
 
   const columns = [
@@ -56,12 +54,6 @@ export default function LogListPage() {
         const map = { public: '공개', private: '비공개', buddies: '버디' };
         return map[v];
       },
-    },
-    {
-      title: '타입',
-      dataIndex: 'type',
-      width: 80,
-      render: (t: LogType) => (t === 'BUDDY' ? '버디' : '개인'),
     },
     {
       title: '스팟',
@@ -109,17 +101,6 @@ export default function LogListPage() {
             { label: '공개', value: 'public' },
             { label: '비공개', value: 'private' },
             { label: '버디', value: 'buddies' },
-          ]}
-        />
-        <Select
-          placeholder="타입"
-          value={type}
-          onChange={(val) => set({ type: val, page: '1' })}
-          allowClear
-          style={{ width: 120 }}
-          options={[
-            { label: '개인', value: 'INDIVIDUAL' },
-            { label: '버디', value: 'BUDDY' },
           ]}
         />
       </Space>

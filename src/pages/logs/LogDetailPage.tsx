@@ -37,9 +37,6 @@ export default function LogDetailPage() {
         <Descriptions.Item label="공개 범위">
           {visibilityLabel[log.visibility] ?? log.visibility}
         </Descriptions.Item>
-        <Descriptions.Item label="타입">
-          {log.type === 'BUDDY' ? '버디' : '개인'}
-        </Descriptions.Item>
         <Descriptions.Item label="상태">
           {log.deletedAt ? (
             <Tag color="red">삭제됨</Tag>

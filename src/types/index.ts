@@ -109,7 +109,6 @@ export interface UserUpdateRequest {
 
 // 로그
 export type LogVisibility = 'private' | 'public' | 'buddies';
-export type LogType = 'INDIVIDUAL' | 'BUDDY';
 
 export interface LogSpot {
   id: string;
@@ -126,8 +125,6 @@ export interface Log {
   title: string;
   logDate: string;
   visibility: LogVisibility;
-  type: LogType;
-  status: string;
   createdAt: string;
   deletedAt: string | null;
   user: {
@@ -146,7 +143,6 @@ export interface LogListParams extends PaginationParams {
   search?: string;
   userId?: string;
   visibility?: LogVisibility;
-  type?: LogType;
   dateFrom?: string;
   dateTo?: string;
   status?: EntityStatus;
