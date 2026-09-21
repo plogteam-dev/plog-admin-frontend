@@ -69,6 +69,62 @@ export interface DailyStatsParams {
   to?: string;
 }
 
+// 사용 분석 (analytics-sessions 명세 §4·§6)
+export type AnalyticsPlatform = 'all' | 'ios' | 'android';
+
+export interface DailyMetric {
+  date: string;
+  platform: AnalyticsPlatform;
+  auUsers: number;
+  auAnonNew: number;
+  auAnonReturning: number;
+  newUsers: number;
+  sessions: number;
+  avgSessionSec: number;
+  p50SessionSec: number;
+  creators: number;
+  pushEntrySessions: number;
+  cohortD1: number;
+  retainedD1: number;
+  cohortD7: number;
+  retainedD7: number;
+  cohortD30: number;
+  retainedD30: number;
+}
+
+export interface WeeklyMetric {
+  weekStart: string;
+  wau: number;
+  wauCreators: number;
+  sessions: number;
+  avgSessionSec: number;
+  newUsers: number;
+}
+
+export type VisitIntervalBucket = '1d' | '2-3d' | '4-7d' | '8-14d' | '15-30d' | '30d+';
+
+export interface VisitIntervalItem {
+  bucket: VisitIntervalBucket;
+  users: number;
+}
+
+export interface AnalyticsResponse {
+  daily: DailyMetric[];
+  weekly: WeeklyMetric[];
+  visitInterval: VisitIntervalItem[];
+}
+
+export interface AnalyticsParams {
+  from?: string;
+  to?: string;
+  platform?: AnalyticsPlatform;
+}
+
+export interface AnalyticsRebuildParams {
+  from?: string;
+  to?: string;
+}
+
 // 공통
 export type EntityStatus = 'active' | 'deleted';
 

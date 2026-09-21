@@ -36,3 +36,29 @@ export const REPORT_REASON_LABEL: Record<string, string> = {
   impersonation: '사칭',
   other: '기타',
 };
+
+// 사용 분석 — 방문 주기 버킷 (명세 §6 순서 고정)
+export const VISIT_INTERVAL_BUCKETS = [
+  '1d',
+  '2-3d',
+  '4-7d',
+  '8-14d',
+  '15-30d',
+  '30d+',
+] as const;
+
+export const VISIT_INTERVAL_LABEL: Record<string, string> = {
+  '1d': '매일',
+  '2-3d': '2~3일',
+  '4-7d': '4~7일',
+  '8-14d': '8~14일',
+  '15-30d': '15~30일',
+  '30d+': '30일 이상',
+};
+
+// 차트 시리즈 색 (검증된 팔레트 슬롯 1·2·3)
+export const CHART_SERIES = {
+  blue: '#2a78d6',
+  orange: '#eb6834',
+  aqua: '#1baf7a',
+} as const;

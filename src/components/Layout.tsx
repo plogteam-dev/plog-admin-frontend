@@ -3,6 +3,7 @@ import { Outlet, useNavigate, useLocation } from 'react-router';
 import { Layout as AntLayout, Menu, Button, theme, Typography } from 'antd';
 import {
   DashboardOutlined,
+  LineChartOutlined,
   UserOutlined,
   FileTextOutlined,
   EnvironmentOutlined,
@@ -19,6 +20,7 @@ const { Header, Sider, Content } = AntLayout;
 
 const menuItems = [
   { key: '/', icon: <DashboardOutlined />, label: '대시보드' },
+  { key: '/analytics', icon: <LineChartOutlined />, label: '사용 분석' },
   { key: '/users', icon: <UserOutlined />, label: '유저 관리' },
   { key: '/logs', icon: <FileTextOutlined />, label: '로그 관리' },
   { key: '/spots', icon: <EnvironmentOutlined />, label: '스팟 관리' },

@@ -6,6 +6,7 @@ import { useAuthStore } from '@/store/authStore';
 import Layout from '@/components/Layout';
 import LoginPage from '@/pages/LoginPage';
 import DashboardPage from '@/pages/DashboardPage';
+import AnalyticsPage from '@/pages/AnalyticsPage';
 import UserListPage from '@/pages/users/UserListPage';
 import UserDetailPage from '@/pages/users/UserDetailPage';
 import LogListPage from '@/pages/logs/LogListPage';
@@ -51,6 +52,7 @@ export default function App() {
                 }
               >
                 <Route index element={<DashboardPage />} />
+                <Route path="analytics" element={<AnalyticsPage />} />
                 <Route path="users" element={<UserListPage />} />
                 <Route path="users/:id" element={<UserDetailPage />} />
                 <Route path="logs" element={<LogListPage />} />
