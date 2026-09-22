@@ -169,11 +169,12 @@ export default function ReportDetailPage() {
               {report.comment?.user?.nickname ?? '-'}
             </Descriptions.Item>
             <Descriptions.Item label="부모 로그">
-              {report.comment?.spot?.logId ? (
-                <Link to={`/logs/${report.comment.spot.logId}`}>로그 보기</Link>
-              ) : (
-                '-'
-              )}
+              {(() => {
+                // 스팟 댓글은 spot.logId, 음악 댓글은 log.id가 부모 로그다.
+                const logId =
+                  report.comment?.spot?.logId ?? report.comment?.log?.id;
+                return logId ? <Link to={`/logs/${logId}`}>로그 보기</Link> : '-';
+              })()}
             </Descriptions.Item>
           </>
         )}

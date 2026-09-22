@@ -299,9 +299,13 @@ export interface ReportComment {
     nickname: string;
     email: string;
   };
-  // 댓글 신고 → 부모 로그(/logs/:id) 링크용
+  // 댓글 신고 → 부모 로그(/logs/:id) 링크용. 댓글의 대상은 스팟이거나
+  // '그날의 음악'(exclusive arc) — 음악 댓글은 spot이 null이고 log가 대상이다.
   spot?: {
     logId: string;
+  } | null;
+  log?: {
+    id: string;
   } | null;
 }
 
