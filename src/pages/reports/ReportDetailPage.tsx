@@ -96,6 +96,11 @@ export default function ReportDetailPage() {
     });
   };
 
+  // 스팟 댓글은 spot.logId, 음악 댓글은 log.id가 부모 로그다(exclusive arc).
+  const commentParentLogId =
+    report.comment?.spot?.logId ?? report.comment?.log?.id;
+
+
   return (
     <>
       <Space style={{ marginBottom: 24 }} wrap>
@@ -169,12 +174,11 @@ export default function ReportDetailPage() {
               {report.comment?.user?.nickname ?? '-'}
             </Descriptions.Item>
             <Descriptions.Item label="부모 로그">
-              {(() => {
-                // 스팟 댓글은 spot.logId, 음악 댓글은 log.id가 부모 로그다.
-                const logId =
-                  report.comment?.spot?.logId ?? report.comment?.log?.id;
-                return logId ? <Link to={`/logs/${logId}`}>로그 보기</Link> : '-';
-              })()}
+              {commentParentLogId ? (
+                <Link to={`/logs/${commentParentLogId}`}>로그 보기</Link>
+              ) : (
+                '-'
+              )}
             </Descriptions.Item>
           </>
         )}
